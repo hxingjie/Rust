@@ -2711,30 +2711,28 @@ if let 和 while let 表达式可以接受可反驳和不可反驳的模式，�
     因为根据定义它们旨在处理可能的失败：条件表达式的功能在于它能够根据成功或失败来执行不同的操作。
 
 ### 18.3 模式语法
+#### 匹配字面值
 ```rust
-// 匹配字面值
 let x = 1;
-
 match x {
     1 => println!("one"),
     2 => println!("two"),
     3 => println!("three"),
     _ => println!("anything"),
 }
-
-// 匹配命名变量
+```
+#### 匹配命名变量
+```rust
 let x = Some(5);
 let y = 10;
-
 match x {
     Some(50) => println!("Got 50"),
     Some(y) => println!("Matched, y = {y}"),
     _ => println!("Default case, x = {x:?}"),
 }
-
 println!("at the end: x = {x:?}, y = {y}");
-
-// 多个模式
+```
+#### 多个模式
 ```rust
 let x = 1;
 match x {
@@ -2757,8 +2755,9 @@ match x {
     'A'..='Z' => println!("['A', 'Z']"),
     _ => println!("angthing"),
 }
-
-// 解构 元组 枚举 结构体
+```
+#### 解构 元组 枚举 结构体
+```rust
 // 1.结构体
 struct Point {
     x: i32,
@@ -2777,6 +2776,7 @@ fn main() {
         Point { x, y } => println!("On neither axis: ({x}, {y})"),
     }
 }
+
 // 2.枚举
 enum Message {
     Quit,
@@ -2802,8 +2802,42 @@ fn main() {
     }
 }
 
+// 3.解构嵌套的结构体和枚举
+enum Color {
+    Rgb(i32, i32, i32,),
+    Hsv(i32, i32, i32,),
+}
+enum Message {
+    Quit,
+    Move { x: i32, y: i32, },
+    Write ( String, ),
+    ChangeColor( Color ),
+}
+fn main() {
+    let msg = Message::ChangeColor(Color::Hsv(0, 160, 255));
 
+    match msg {
+        Message::ChangeColor(Color::Rgb(r, g, b )) => {
+            println!("Change color to red {r}, green {g}, and blue {b}");
+        },
+        Message::ChangeColor(Color::Hsv(h, s, v)) => {
+            println!("Change color to hue {h}, saturation {s}, value {v}");
+        },
+        _ => (),
+    }
+}
+
+// 4.解构结构体和元组
+struct Point {
+    x: i32,
+    y: i32,
+}
+fn main() {
+    let ( (a, b), Point { x: c, y: d } ) = ( (3, 10,), Point {x: 0, y: 1} );
+}
 ```
+#### 忽略模式中的值
+```rust
 
 ```
 
